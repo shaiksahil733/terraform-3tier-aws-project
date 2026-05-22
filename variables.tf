@@ -72,9 +72,6 @@ variable "ntier_app" {
   type = object({
     Name        = string
     description = string
-    ingress = object({
-      cidr_ipv4 = optional(string)
-    })
     egress = object({
       from_port   = number
       to_port     = number
@@ -117,7 +114,7 @@ variable "key_pair" {
 }
 
 variable "db_password" {
-  type = string
+  type      = string
   sensitive = true
-  
+
 }

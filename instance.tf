@@ -4,16 +4,16 @@ resource "aws_key_pair" "main_kp" {
 }
 
 resource "aws_instance" "bastion" {
-  ami                         = data.aws_ami.ubuntu.id
-  instance_type               = "t2.micro"
-  subnet_id                   = aws_subnet.ntier_public[0].id
-  vpc_security_group_ids      = [aws_security_group.ntier_bastion.id]
-  key_name                    = var.key_pair.name
+  ami                    = data.aws_ami.ubuntu.id
+  instance_type          = "t3.micro"
+  subnet_id              = aws_subnet.ntier_public[0].id
+  vpc_security_group_ids = [aws_security_group.ntier_bastion.id]
+  key_name               = aws_key_pair.main_kp.key_name
   # monitoring = true
   associate_public_ip_address = true
   tags = {
-  Name = "bastion"
-}
+    Name = "bastion"
+  }
 }
 
 resource "aws_lb" "ntier_alb" {
@@ -68,16 +68,16 @@ resource "aws_lb_listener" "ntier_listener" {
 
 
 resource "aws_instance" "app" {
-  count = 2
+  count                  = 1
   ami                    = data.aws_ami.ubuntu.id
-  instance_type          = "t2.micro"
+  instance_type          = "t3.micro"
   subnet_id              = aws_subnet.ntier_private[count.index].id
   vpc_security_group_ids = [aws_security_group.ntier_app.id]
   # monitoring = true
-  key_name               = var.key_pair.name
+  key_name = aws_key_pair.main_kp.key_name
   tags = {
-  Name = "app-${count.index + 1}"
-}
+    Name = "app-${count.index + 1}"
+  }
 
   user_data = <<-EOF
   #!/bin/bash
@@ -92,7 +92,7 @@ resource "aws_instance" "app" {
 
 
 resource "aws_lb_target_group_attachment" "ntier_attach" {
-  count            = 2
+  count            = 1
   target_group_arn = aws_lb_target_group.ntier_tg.arn
   target_id        = aws_instance.app[count.index].id
   port             = 80

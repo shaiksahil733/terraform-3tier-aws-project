@@ -42,8 +42,8 @@ resource "aws_route_table" "ntier_public_route_table" {
   count  = local.subnets_public != 0 ? 1 : 0
   vpc_id = aws_vpc.ntier.id
   tags = {
-  Name = "public-rt"
-}
+    Name = "public-rt"
+  }
   route {
     cidr_block = local.cidr_block
     gateway_id = aws_internet_gateway.ntier_igw.id
@@ -91,7 +91,7 @@ resource "aws_nat_gateway" "ntier_nat" {
   allocation_id = aws_eip.ntier_lb.id
   subnet_id     = aws_subnet.ntier_public[0].id
   tags = {
-  Name = "ntier-nat"
-}
+    Name = "ntier-nat"
+  }
 }
 
