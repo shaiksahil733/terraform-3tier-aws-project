@@ -208,6 +208,9 @@ Some production-grade settings were documented but optionally disabled during te
 - Load Balancing
 - Cloud Infrastructure Automation
 - Multi-Tier Architecture Design
+## Troubleshooting & Debugging
+
+Common Terraform, AWS, SSH, ALB, and RDS issues faced during development are documented in `TROUBLESHOOTING.md`.
 
 ---
 
